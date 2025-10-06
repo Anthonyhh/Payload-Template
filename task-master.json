@@ -1,0 +1,120 @@
+[
+  {
+    "id": 100,
+    "title": "EPIC-00: Project Initialization",
+    "status": "pending",
+    "priority": "high",
+    "description": "Initialize blueprint folders, env templates, and docs.",
+    "details": "Create /core, /config, /emails, /pipeline, /tasks, /scripts, /docs. Add PRD, .env.example, README.",
+    "testStrategy": "Dirs exist; repo builds locally.",
+    "subtasks": [
+      { "id": 101, "title": "Scaffold repository structure", "status": "pending", "priority": "high" },
+      { "id": 102, "title": "Add environment templates", "status": "pending", "priority": "high" },
+      { "id": 103, "title": "Baseline README and PRD", "status": "pending", "priority": "medium" }
+    ]
+  },
+  {
+    "id": 200,
+    "title": "EPIC-01: Infrastructure Provisioning (via MCPs)",
+    "status": "pending",
+    "priority": "high",
+    "description": "Use MCPs to provision Cloudflare DNS & R2, Railway service, MongoDB.",
+    "dependencies": [100],
+    "details": "CF: DNS/R2; RW: service/env; MDB: DB + user.",
+    "testStrategy": "DNS resolves; R2 reachable; RW builds; MDB connects.",
+    "subtasks": [
+      { "id": 201, "title": "Create Cloudflare DNS records", "status": "pending", "priority": "high" },
+      { "id": 202, "title": "Create Cloudflare R2 bucket", "status": "pending", "priority": "high" },
+      { "id": 203, "title": "Provision Railway service (Docker)", "status": "pending", "priority": "high" },
+      { "id": 204, "title": "Provision MongoDB instance / user", "status": "pending", "priority": "high" }
+    ]
+  },
+  {
+    "id": 300,
+    "title": "EPIC-02: Core App — Payload + Next + Email + Storage",
+    "status": "pending",
+    "priority": "high",
+    "description": "Wire PayloadCMS with Mongo adapter, R2 storage, and useSend.",
+    "dependencies": [200],
+    "details": "Install payload, @payloadcms/db-mongodb, @payloadcms/storage-r2, usesend-js.",
+    "testStrategy": "Admin at /admin; R2 uploads; useSend email delivered.",
+    "subtasks": [
+      { "id": 301, "title": "Install & configure Payload + Mongo adapter", "status": "pending", "priority": "high" },
+      { "id": 302, "title": "Add R2 storage plugin", "status": "pending", "priority": "high" },
+      { "id": 303, "title": "useSend email integration", "status": "pending", "priority": "high" },
+      { "id": 304, "title": "Health endpoint", "status": "pending", "priority": "medium" }
+    ]
+  },
+  {
+    "id": 400,
+    "title": "EPIC-03: Keyword Personalization Engine",
+    "status": "pending",
+    "priority": "high",
+    "description": "Collections, middleware, resolver.",
+    "dependencies": [300],
+    "details": "LandingPages, Variants(+indexes), Keywords(optional); middleware sets kw; resolver selects variant.",
+    "testStrategy": "Visit /?kw=term → variant; cookie set; bots see default.",
+    "subtasks": [
+      { "id": 401, "title": "Collections & indexes", "status": "pending", "priority": "high" },
+      { "id": 402, "title": "Next middleware for kw", "status": "pending", "priority": "high" },
+      { "id": 403, "title": "Variant resolver & merge", "status": "pending", "priority": "high" }
+    ]
+  },
+  {
+    "id": 500,
+    "title": "EPIC-04: Security, SEO, Caching, and WAF",
+    "status": "pending",
+    "priority": "medium",
+    "description": "Headers, cache rules, canonical, sitemap.",
+    "dependencies": [400],
+    "details": "CSP/HSTS/Referrer/XFO; CF bypass /admin,/api; cache static; kw cache variance optional.",
+    "testStrategy": "A on securityheaders.com; SEO ≥ 95.",
+    "subtasks": [
+      { "id": 501, "title": "Security headers", "status": "pending", "priority": "high" },
+      { "id": 502, "title": "Cloudflare cache rules", "status": "pending", "priority": "medium" },
+      { "id": 503, "title": "SEO canonical + bot-safe default", "status": "pending", "priority": "high" }
+    ]
+  },
+  {
+    "id": 600,
+    "title": "EPIC-05: Observability & CI/CD",
+    "status": "pending",
+    "priority": "medium",
+    "description": "Structured logs, CI pipeline, scans.",
+    "dependencies": [300],
+    "details": "pino logger; GH Actions: lint/test/build/scan/deploy/health.",
+    "testStrategy": "CI green; health check OK.",
+    "subtasks": [
+      { "id": 601, "title": "Structured logging & request IDs", "status": "pending", "priority": "medium" },
+      { "id": 602, "title": "GitHub Actions pipeline", "status": "pending", "priority": "high" }
+    ]
+  },
+  {
+    "id": 700,
+    "title": "EPIC-06: Bootstrap CLI & Reusability",
+    "status": "pending",
+    "priority": "high",
+    "description": "scripts/bootstrap.mjs prompts & writes configs; optional auto-provision.",
+    "dependencies": [200, 300, 400, 600],
+    "details": "Generate site.json/env.json/.env; optionally run Task Master provisioning.",
+    "testStrategy": "New site deploys in < 15 min.",
+    "subtasks": [
+      { "id": 701, "title": "Bootstrap CLI", "status": "pending", "priority": "high" },
+      { "id": 702, "title": "Template propagation & upgrade path", "status": "pending", "priority": "medium" }
+    ]
+  },
+  {
+    "id": 900,
+    "title": "EPIC-07: End-to-End Smoke & Hardening",
+    "status": "pending",
+    "priority": "high",
+    "description": "E2E + load + security + SEO checks; docs/runbooks.",
+    "dependencies": [500, 600, 700],
+    "details": "Playwright + k6 + ZAP + Lighthouse; finalize docs.",
+    "testStrategy": "All checks pass; sign-off.",
+    "subtasks": [
+      { "id": 901, "title": "E2E & load tests", "status": "pending", "priority": "high" },
+      { "id": 902, "title": "Docs & runbooks", "status": "pending", "priority": "medium" }
+    ]
+  }
+]

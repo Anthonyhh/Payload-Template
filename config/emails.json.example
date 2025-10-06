@@ -1,0 +1,7 @@
+{
+  "templates": {
+    "lead_submission": "lead_submitted.html",
+    "welcome": "welcome_keyword_variant.html",
+    "admin_notification": "admin_notification.html"
+  }
+}

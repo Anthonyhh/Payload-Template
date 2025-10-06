@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm install:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm test:*)",
+      "Bash(node:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run dev:*)",
+      "WebFetch(domain:robolabs.so)",
+      "Bash(git add:*)",
+      "Bash(git init:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)",
+      "Bash(gh auth:*)",
+      "Bash(\"C:\\Program Files\\GitHub CLI\\gh.exe\" auth status)",
+      "Bash(git push:*)",
+      "Bash(git remote add:*)",
+      "Bash(npm run lint)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
