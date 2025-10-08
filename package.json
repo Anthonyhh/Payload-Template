@@ -1,8 +1,14 @@
 {
-  "name": "flowstate-it",
+  "name": "payload-template",
   "version": "1.0.0",
   "type": "module",
-  "description": "FlowState IT - AI Automation Agency",
+  "description": "Production-ready Payload CMS 3.0 + Next.js 15 template with enterprise infrastructure",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anthonyhh/Payload-Template.git"
+  },
+  "author": "Anthony Hanson-Harrison",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
