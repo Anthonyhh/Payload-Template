@@ -1,5 +1,3 @@
-import type { LeadFormData } from './validations'
-
 export type LogLevel = 'error' | 'warn' | 'info' | 'debug'
 
 export type LogContext = {
@@ -105,26 +103,6 @@ class Logger {
   }
 
   // Specialized logging methods for domain-specific events
-  leadSubmissionStarted(leadData: Partial<LeadFormData>, context?: LogContext): void {
-    this.info('Lead submission started', {
-      ...context,
-      service: leadData.service,
-      hasEmail: !!leadData.email,
-      hasCompany: !!leadData.company,
-    })
-  }
-
-  leadSubmissionSuccess(leadId: string, context?: LogContext): void {
-    this.info('Lead submission successful', {
-      ...context,
-      leadId,
-    })
-  }
-
-  leadSubmissionError(error: Error, context?: LogContext): void {
-    this.error('Lead submission failed', context, error)
-  }
-
   webhookNotificationStarted(url: string, context?: LogContext): void {
     this.info('Webhook notification started', {
       ...context,

@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server'
 import { performanceMonitor } from '@/lib/monitoring'
-import { dbConnectionPool } from '@/lib/db'
 import { healthCache, withCache } from '@/lib/cache'
 import {
   createCachedResponse,
@@ -31,19 +30,13 @@ export async function GET(request: NextRequest) {
           rss: number
         }
         metrics: number
-        database: {
-          connectionPool: any
-          healthy: boolean
-        }
         cache: {
           cached: boolean
           stats: any
         }
       }> => {
-        const dbHealthy = await dbConnectionPool.healthCheck()
-
         return {
-          status: dbHealthy ? 'healthy' : 'degraded',
+          status: 'healthy',
           timestamp: new Date().toISOString(),
           uptime: process.uptime(),
           memory: {
@@ -53,10 +46,6 @@ export async function GET(request: NextRequest) {
             rss: Math.round((process.memoryUsage().rss / 1024 / 1024) * 100) / 100,
           },
           metrics: performanceMonitor.getMetrics().length,
-          database: {
-            connectionPool: dbConnectionPool.getStats(),
-            healthy: dbHealthy,
-          },
           cache: {
             cached: false, // Will be overridden by withCache
             stats: healthCache.getStats(),
@@ -65,24 +54,6 @@ export async function GET(request: NextRequest) {
       },
       15000 // Cache for 15 seconds
     )
-
-    // If database is unhealthy, return 503 but still cache the response briefly
-    if (!healthData.database.healthy) {
-      const errorResponse = createCompressedResponse(
-        {
-          status: 'unhealthy',
-          error: 'Database connection failed',
-          timestamp: new Date().toISOString(),
-          cache: { cached },
-        },
-        request,
-        { status: 503 }
-      )
-
-      // Cache error responses for a shorter time
-      errorResponse.headers.set('Cache-Control', 'public, max-age=5, s-maxage=2')
-      return errorResponse
-    }
 
     return createCompressedResponse(healthData, request, {
       headers: {

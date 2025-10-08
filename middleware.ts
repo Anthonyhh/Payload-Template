@@ -66,7 +66,7 @@ function addSecurityHeaders(response: NextResponse) {
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: https: blob:",
-    "connect-src 'self' https://api.supabase.io https://*.supabase.co https://www.google-analytics.com",
+    "connect-src 'self' https://www.google-analytics.com",
     "font-src 'self' https://fonts.gstatic.com",
     "frame-src 'none'",
     "base-uri 'self'",
@@ -130,16 +130,13 @@ function applyRateLimit(request: NextRequest, response: NextResponse) {
   const ip =
     request.headers.get('x-forwarded-for') ||
     request.headers.get('x-real-ip') ||
-    request.ip ||
-    'unknown'
+    '127.0.0.1'
 
   // Choose appropriate rate limit config based on endpoint
   let config = rateLimitConfigs.api
   const pathname = request.nextUrl.pathname
 
-  if (pathname === '/api/leads') {
-    config = rateLimitConfigs.leads
-  } else if (pathname.startsWith('/api/health') || pathname.startsWith('/api/metrics')) {
+  if (pathname.startsWith('/api/health') || pathname.startsWith('/api/metrics')) {
     config = rateLimitConfigs.monitoring
   } else if (pathname.startsWith('/api/docs')) {
     config = rateLimitConfigs.monitoring // Documentation uses monitoring limits

@@ -1,5 +1,5 @@
-# Robots.txt for FlowState IT
-# https://flowstate-it.com
+# Robots.txt for Payload CMS Website
+# Update NEXT_PUBLIC_SERVER_URL in production
 
 User-agent: *
 Allow: /
@@ -8,8 +8,8 @@ Disallow: /admin/
 Disallow: /_next/
 Disallow: /static/
 
-# Sitemap location
-Sitemap: https://flowstate-it.com/sitemap.xml
+# Sitemap location (update with your domain)
+# Sitemap: https://yourdomain.com/sitemap.xml
 
 # Crawl-delay for bots that respect it
 Crawl-delay: 1

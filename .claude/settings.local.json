@@ -32,7 +32,14 @@
       "Bash(gh repo view:*)",
       "Bash(\"C:\\Program Files\\GitHub CLI\\gh.exe\" repo create FlowstateIT-Website --public --source=. --remote=origin --description=\"FlowstateIT - AI Automation Agency Website\")",
       "Bash(npx vercel:*)",
-      "WebFetch(domain:flowstateit-website-9pcacifeo-ants-projects-d00a9267.vercel.app)"
+      "WebFetch(domain:flowstateit-website-9pcacifeo-ants-projects-d00a9267.vercel.app)",
+      "WebSearch",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm test:run:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
