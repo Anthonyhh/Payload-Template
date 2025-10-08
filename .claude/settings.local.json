@@ -28,7 +28,11 @@
       "Bash(pnpm rebuild:*)",
       "Bash(pnpm dev:*)",
       "Bash(pnpm add:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(gh repo view:*)",
+      "Bash(\"C:\\Program Files\\GitHub CLI\\gh.exe\" repo create FlowstateIT-Website --public --source=. --remote=origin --description=\"FlowstateIT - AI Automation Agency Website\")",
+      "Bash(npx vercel:*)",
+      "WebFetch(domain:flowstateit-website-9pcacifeo-ants-projects-d00a9267.vercel.app)"
     ],
     "deny": [],
     "ask": []
