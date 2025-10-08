@@ -66,7 +66,7 @@ async function main(){
 
   log('config','writing /config files')
   writeJSON(path.join(repoRoot,'config','site.json'), { name: config.brand, domain: config.domain, brandColor: config.primaryColor, keywords: config.keywords, cta: config.cta, theme: 'modern' })
-  writeJSON(path.join(repoRoot,'config','env.json'), { RAILWAY_PROJECT: 'flowstateit', MONGO_URI: process.env.MONGODB_URI ?? '', CLOUDFLARE_ZONE_ID: process.env.CLOUDFLARE_ZONE_ID ?? '', USESEND_KEY: process.env.USESEND_API_KEY ?? '', R2_BUCKET: process.env.R2_BUCKET ?? '' })
+  writeJSON(path.join(repoRoot,'config','env.json'), { VERCEL_PROJECT: 'flowstateit', MONGO_URI: process.env.MONGODB_URI ?? '', CLOUDFLARE_ZONE_ID: process.env.CLOUDFLARE_ZONE_ID ?? '', USESEND_KEY: process.env.USESEND_API_KEY ?? '', R2_BUCKET: process.env.R2_BUCKET ?? '' })
   copyIfMissing(path.join(repoRoot,'config','emails.json.example'), path.join(repoRoot,'config','emails.json'))
 
   log('env','ensuring .env from .env.example'); ensureDotEnvFromExample()
@@ -91,9 +91,9 @@ async function main(){
    npx task-master-ai parse-prd docs/PRD.md --num-tasks=80
    npx task-master-ai generate
    npx task-master-ai run --match "EPIC-01: Infrastructure Provisioning"
-4) Deploy & map DNS (Cloudflare MCP):
-   - Railway: build service, set env
-   - Cloudflare: CNAME cms.${config.domain} → <railway-host> (orange)
+4) Deploy & map DNS:
+   - Vercel: connect GitHub repo, set env vars
+   - Cloudflare: CNAME cms.${config.domain} → <vercel-domain> (orange)
 5) Verify:
    curl -s https://cms.${config.domain}/api/health
    open https://cms.${config.domain}/admin
