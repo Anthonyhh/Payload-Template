@@ -18,7 +18,17 @@
       "Bash(\"C:\\Program Files\\GitHub CLI\\gh.exe\" auth status)",
       "Bash(git push:*)",
       "Bash(git remote add:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Read(//c/Users/antho/OneDrive/Pictures/Screenshots/**)",
+      "Bash(corepack enable)",
+      "WebFetch(domain:flowstateitnew-rk9o.vercel.app)",
+      "Bash(cat:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm rebuild:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm build:*)"
     ],
     "deny": [],
     "ask": []

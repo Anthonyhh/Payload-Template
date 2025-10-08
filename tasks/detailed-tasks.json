@@ -1,0 +1,1123 @@
+[
+  {
+    "id": 100,
+    "title": "EPIC-00: Project Initialization",
+    "status": "completed",
+    "priority": "high",
+    "description": "Initialize blueprint folders, env templates, and docs.",
+    "details": "Create /core, /config, /emails, /pipeline, /tasks, /scripts, /docs. Add PRD, .env.example, README.",
+    "testStrategy": "Dirs exist; repo builds locally.",
+    "completedAt": "2025-01-06",
+    "subtasks": [
+      { "id": 101, "title": "Scaffold repository structure", "status": "completed", "priority": "high", "description": "Create all required directories" },
+      { "id": 102, "title": "Add environment templates", "status": "completed", "priority": "high", "description": "Create .env.example with all required vars" },
+      { "id": 103, "title": "Baseline README and PRD", "status": "completed", "priority": "medium", "description": "Document project mission and architecture" },
+      { "id": 104, "title": "Create task-master.json with EPICs", "status": "completed", "priority": "high", "description": "Define 7 EPICs with dependencies" },
+      { "id": 105, "title": "Write bootstrap CLI script", "status": "completed", "priority": "high", "description": "Interactive script for site generation" },
+      { "id": 106, "title": "Setup GitHub Actions CI workflow", "status": "completed", "priority": "medium", "description": "Basic lint/test/build pipeline" },
+      { "id": 107, "title": "Install task-master-ai", "status": "completed", "priority": "high", "description": "Global npm install of task orchestration tool" }
+    ]
+  },
+  {
+    "id": 200,
+    "title": "EPIC-01: Infrastructure Provisioning (via MCPs)",
+    "status": "pending",
+    "priority": "high",
+    "description": "Use MCPs to provision Cloudflare DNS & R2, Railway service, MongoDB.",
+    "dependencies": [100],
+    "details": "CF: DNS/R2; RW: service/env; MDB: DB + user.",
+    "testStrategy": "DNS resolves; R2 reachable; RW builds; MDB connects.",
+    "subtasks": [
+      {
+        "id": 201,
+        "title": "Setup Cloudflare Account & API",
+        "status": "pending",
+        "priority": "high",
+        "description": "Create account, register domain, get API token",
+        "steps": [
+          "Sign up at cloudflare.com",
+          "Add domain or transfer existing",
+          "Navigate to My Profile > API Tokens",
+          "Create token with Zone:Edit permissions",
+          "Copy Zone ID from domain dashboard",
+          "Save API token to password manager"
+        ]
+      },
+      {
+        "id": 202,
+        "title": "Provision Cloudflare R2 Bucket",
+        "status": "pending",
+        "priority": "high",
+        "description": "Create R2 storage bucket for media uploads",
+        "steps": [
+          "Navigate to R2 Object Storage in Cloudflare dashboard",
+          "Enable R2 if first time",
+          "Create new bucket (e.g., 'flowstateit-assets')",
+          "Generate R2 API credentials",
+          "Note Account ID, Access Key, Secret Key",
+          "Construct endpoint URL: https://<accountid>.r2.cloudflarestorage.com",
+          "Test with AWS S3 CLI: aws s3 ls --endpoint-url=<endpoint>"
+        ]
+      },
+      {
+        "id": 203,
+        "title": "Create Cloudflare DNS Records",
+        "status": "pending",
+        "priority": "high",
+        "description": "Setup DNS for cms subdomain",
+        "steps": [
+          "In Cloudflare DNS, add CNAME: cms.yourdomain.com",
+          "Point to Railway deployment URL (get after task 205)",
+          "Enable orange cloud (proxied)",
+          "Set TTL to Auto",
+          "Verify DNS propagation: dig cms.yourdomain.com"
+        ]
+      },
+      {
+        "id": 204,
+        "title": "Setup Railway Account",
+        "status": "pending",
+        "priority": "high",
+        "description": "Create Railway account and get API token",
+        "steps": [
+          "Sign up at railway.app",
+          "Add payment method (required for production)",
+          "Create new project: 'FlowstateIT Factory'",
+          "Navigate to Account Settings > Tokens",
+          "Generate API token",
+          "Save token to .env as RAILWAY_API_TOKEN"
+        ]
+      },
+      {
+        "id": 205,
+        "title": "Provision Railway Service",
+        "status": "pending",
+        "priority": "high",
+        "description": "Deploy Docker container to Railway",
+        "dependencies": [204],
+        "steps": [
+          "In Railway project, click 'New Service'",
+          "Choose 'GitHub Repo' or 'Empty Service'",
+          "Connect GitHub repo (anthonyhh/flowstateit-blueprint)",
+          "Railway auto-detects Dockerfile",
+          "Set environment variables (all from .env)",
+          "Deploy and wait for build",
+          "Copy deployment URL (e.g., flowstateit.up.railway.app)",
+          "Test health endpoint: curl https://<railway-url>/api/health"
+        ]
+      },
+      {
+        "id": 206,
+        "title": "Setup MongoDB Atlas",
+        "status": "pending",
+        "priority": "high",
+        "description": "Provision MongoDB cluster and create database",
+        "steps": [
+          "Sign up at mongodb.com/cloud/atlas",
+          "Create new project: 'FlowstateIT'",
+          "Build a cluster (M0 free tier for dev, M10+ for prod)",
+          "Create database user with password",
+          "Whitelist IP: 0.0.0.0/0 (or Railway IPs)",
+          "Get connection string from 'Connect' button",
+          "Format: mongodb+srv://user:pass@cluster.mongodb.net/",
+          "Create database: 'flowstateit_cms'",
+          "Test connection: mongosh '<connection-string>'"
+        ]
+      },
+      {
+        "id": 207,
+        "title": "Setup useSend Email Service",
+        "status": "pending",
+        "priority": "high",
+        "description": "Create useSend account and get API key",
+        "steps": [
+          "Sign up at usesend.com",
+          "Verify email address",
+          "Navigate to API Keys section",
+          "Generate new API key",
+          "Save to .env as USESEND_API_KEY",
+          "Note base URL: https://api.usesend.com"
+        ]
+      },
+      {
+        "id": 208,
+        "title": "Create and populate .env file",
+        "status": "pending",
+        "priority": "high",
+        "description": "Fill all credentials from previous tasks",
+        "dependencies": [202, 206, 207],
+        "steps": [
+          "Copy .env.example to .env",
+          "Generate PAYLOAD_SECRET: openssl rand -base64 48",
+          "Fill MONGODB_URI from task 206",
+          "Fill NEXT_PUBLIC_SERVER_URL: https://cms.yourdomain.com",
+          "Fill R2 credentials from task 202",
+          "Fill USESEND_API_KEY from task 207",
+          "Verify no placeholder values remain",
+          "Test: cat .env | grep -v '^#' | grep '='"
+        ]
+      },
+      {
+        "id": 209,
+        "title": "Verify all infrastructure is reachable",
+        "status": "pending",
+        "priority": "high",
+        "description": "Integration test of all provisioned services",
+        "dependencies": [203, 205, 206, 208],
+        "testCases": [
+          "DNS resolves: nslookup cms.yourdomain.com",
+          "Railway deployment healthy: curl https://<railway>/api/health",
+          "MongoDB connects: node -e 'require(\"mongodb\").MongoClient.connect(process.env.MONGODB_URI)'",
+          "R2 accessible: aws s3 ls --endpoint-url=$R2_ENDPOINT",
+          "All environment variables set: node -e 'console.log(process.env)' | grep -E '(PAYLOAD|MONGO|R2|USESEND)'"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 300,
+    "title": "EPIC-02: Core App — Payload + Next + Email + Storage",
+    "status": "pending",
+    "priority": "high",
+    "description": "Wire PayloadCMS with Mongo adapter, R2 storage, and useSend.",
+    "dependencies": [200],
+    "details": "Install payload, @payloadcms/db-mongodb, @payloadcms/storage-r2, usesend-js.",
+    "testStrategy": "Admin at /admin; R2 uploads; useSend email delivered.",
+    "subtasks": [
+      {
+        "id": 301,
+        "title": "Install PayloadCMS dependencies",
+        "status": "pending",
+        "priority": "high",
+        "description": "Add all required Payload packages",
+        "steps": [
+          "pnpm add payload @payloadcms/db-mongodb @payloadcms/richtext-lexical",
+          "pnpm add @payloadcms/storage-r2 @payloadcms/ui",
+          "pnpm add next react react-dom",
+          "pnpm add -D @types/node @types/react @types/react-dom typescript"
+        ]
+      },
+      {
+        "id": 302,
+        "title": "Create Payload config file",
+        "status": "pending",
+        "priority": "high",
+        "description": "payload.config.ts with MongoDB adapter",
+        "dependencies": [301],
+        "files": [
+          {
+            "path": "payload.config.ts",
+            "content": "Import buildConfig, mongooseAdapter, configure collections, admin settings, server URL, database URI"
+          }
+        ]
+      },
+      {
+        "id": 303,
+        "title": "Configure MongoDB adapter",
+        "status": "pending",
+        "priority": "high",
+        "description": "Connect Payload to MongoDB",
+        "dependencies": [302],
+        "steps": [
+          "Import mongooseAdapter from @payloadcms/db-mongodb",
+          "Configure: db: mongooseAdapter({ url: process.env.MONGODB_URI })",
+          "Set up connection options (pooling, retry logic)",
+          "Add indexes for performance"
+        ]
+      },
+      {
+        "id": 304,
+        "title": "Add Cloudflare R2 storage plugin",
+        "status": "pending",
+        "priority": "high",
+        "description": "Configure R2 for media uploads",
+        "dependencies": [302],
+        "steps": [
+          "pnpm add @payloadcms/storage-r2",
+          "Import r2Storage from plugin",
+          "Configure with R2 credentials from env",
+          "Set bucket, region, endpoint",
+          "Add to payload.config.ts plugins array",
+          "Create Media collection with upload enabled"
+        ]
+      },
+      {
+        "id": 305,
+        "title": "Create base Payload collections",
+        "status": "pending",
+        "priority": "high",
+        "description": "Define LandingPages, Variants, Keywords collections",
+        "dependencies": [302],
+        "files": [
+          {
+            "path": "core/collections/LandingPages.ts",
+            "fields": ["slug (unique)", "title", "baseBlocks (richtext)", "publishedAt", "status"]
+          },
+          {
+            "path": "core/collections/Variants.ts",
+            "fields": ["landingPage (relationship)", "keyword", "patterns[]", "priority", "active", "targetPaths[]", "overrideBlocks"]
+          },
+          {
+            "path": "core/collections/Keywords.ts",
+            "fields": ["value (unique)", "patterns[]", "priority", "category"]
+          },
+          {
+            "path": "core/collections/Media.ts",
+            "fields": ["Standard Payload upload collection"]
+          }
+        ]
+      },
+      {
+        "id": 306,
+        "title": "Setup Next.js integration",
+        "status": "pending",
+        "priority": "high",
+        "description": "Configure Next.js to work with Payload",
+        "dependencies": [301],
+        "files": [
+          {
+            "path": "next.config.js",
+            "content": "withPayload config wrapper, ESM support, image domains for R2"
+          },
+          {
+            "path": "app/layout.tsx",
+            "content": "Root layout with metadata"
+          },
+          {
+            "path": "app/(payload)/admin/[[...segments]]/page.tsx",
+            "content": "Payload admin UI route"
+          }
+        ]
+      },
+      {
+        "id": 307,
+        "title": "Integrate useSend email service",
+        "status": "pending",
+        "priority": "high",
+        "description": "Add email sending capability",
+        "steps": [
+          "pnpm add usesend-js",
+          "Create core/lib/email.ts wrapper",
+          "Import UseSend client",
+          "Configure with USESEND_API_KEY",
+          "Create email templates in /emails",
+          "Add sendEmail() helper function",
+          "Add Payload hooks for email notifications"
+        ]
+      },
+      {
+        "id": 308,
+        "title": "Create email templates",
+        "status": "pending",
+        "priority": "medium",
+        "description": "HTML templates for notifications",
+        "dependencies": [307],
+        "files": [
+          {
+            "path": "emails/lead-submitted.html",
+            "description": "Template for new lead notifications"
+          },
+          {
+            "path": "emails/welcome-variant.html",
+            "description": "Keyword-specific welcome email"
+          },
+          {
+            "path": "emails/admin-notification.html",
+            "description": "Admin alert template"
+          }
+        ]
+      },
+      {
+        "id": 309,
+        "title": "Create health check endpoint",
+        "status": "pending",
+        "priority": "medium",
+        "description": "API route for monitoring",
+        "dependencies": [303],
+        "files": [
+          {
+            "path": "app/api/health/route.ts",
+            "checks": ["Database connection", "R2 connectivity", "Environment variables set", "Payload initialized"]
+          }
+        ]
+      },
+      {
+        "id": 310,
+        "title": "Add TypeScript config",
+        "status": "pending",
+        "priority": "high",
+        "description": "tsconfig.json for Payload + Next",
+        "files": [
+          {
+            "path": "tsconfig.json",
+            "settings": ["strict mode", "ESNext", "paths aliases", "Payload types"]
+          }
+        ]
+      },
+      {
+        "id": 311,
+        "title": "Test Payload admin login",
+        "status": "pending",
+        "priority": "high",
+        "description": "Verify admin panel works",
+        "dependencies": [302, 305, 306],
+        "testSteps": [
+          "pnpm dev",
+          "Navigate to http://localhost:3000/admin",
+          "Create first admin user",
+          "Login successfully",
+          "Verify collections visible (LandingPages, Variants, Keywords, Media)"
+        ]
+      },
+      {
+        "id": 312,
+        "title": "Test R2 media upload",
+        "status": "pending",
+        "priority": "high",
+        "description": "Verify file uploads to R2",
+        "dependencies": [304, 311],
+        "testSteps": [
+          "Login to /admin",
+          "Go to Media collection",
+          "Upload test image",
+          "Verify file appears in R2 bucket (aws s3 ls)",
+          "Check image URL is publicly accessible"
+        ]
+      },
+      {
+        "id": 313,
+        "title": "Test email sending",
+        "status": "pending",
+        "priority": "high",
+        "description": "Verify useSend integration works",
+        "dependencies": [307, 308],
+        "testSteps": [
+          "Create test script: core/scripts/test-email.ts",
+          "Import email service",
+          "Send test email using template",
+          "Check inbox for delivery",
+          "Verify template renders correctly"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 400,
+    "title": "EPIC-03: Keyword Personalization Engine",
+    "status": "pending",
+    "priority": "high",
+    "description": "Collections, middleware, resolver.",
+    "dependencies": [300],
+    "details": "LandingPages, Variants(+indexes), Keywords(optional); middleware sets kw; resolver selects variant.",
+    "testStrategy": "Visit /?kw=term → variant; cookie set; bots see default.",
+    "subtasks": [
+      {
+        "id": 401,
+        "title": "Add indexes to Variants collection",
+        "status": "pending",
+        "priority": "high",
+        "description": "Optimize variant lookups",
+        "steps": [
+          "Add MongoDB index on 'keyword' field",
+          "Add compound index on (landingPage, active)",
+          "Add index on 'priority' for sorting",
+          "Test query performance with EXPLAIN"
+        ]
+      },
+      {
+        "id": 402,
+        "title": "Create Next.js middleware for keyword detection",
+        "status": "pending",
+        "priority": "high",
+        "description": "Detect and set keyword cookie",
+        "files": [
+          {
+            "path": "middleware.ts",
+            "logic": [
+              "Check for ?kw= query param",
+              "Fall back to utm_term",
+              "Extract from referrer if Google search",
+              "Set cookie: kw=<keyword>; Max-Age=3600; HttpOnly",
+              "Skip /admin, /api, /_next paths",
+              "Forward to request"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 403,
+        "title": "Create variant resolver utility",
+        "status": "pending",
+        "priority": "high",
+        "description": "Select best matching variant",
+        "files": [
+          {
+            "path": "core/lib/variant-resolver.ts",
+            "functions": [
+              "getVariantForKeyword(landingPageId, keyword)",
+              "matchExact(keyword)",
+              "matchPattern(keyword) - regex matching",
+              "matchParent(keyword) - hierarchical fallback",
+              "getDefault() - fallback variant",
+              "mergeBlocks(base, override)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 404,
+        "title": "Implement variant selection logic",
+        "status": "pending",
+        "priority": "high",
+        "description": "Priority-based selection algorithm",
+        "dependencies": [403],
+        "algorithm": [
+          "1. Try exact match: keyword === variant.keyword",
+          "2. Try pattern match: variant.patterns.some(p => new RegExp(p).test(keyword))",
+          "3. Try parent match: keyword.startsWith(variant.keyword)",
+          "4. Return default variant (highest priority with keyword=null)",
+          "5. Sort by priority DESC if multiple matches"
+        ]
+      },
+      {
+        "id": 405,
+        "title": "Create block merging function",
+        "status": "pending",
+        "priority": "high",
+        "description": "Merge variant blocks into base page",
+        "dependencies": [403],
+        "logic": [
+          "Deep clone baseBlocks array",
+          "Iterate overrideBlocks",
+          "Match by block.id or block.type",
+          "Replace matching blocks",
+          "Append new blocks at specified position",
+          "Return merged array"
+        ]
+      },
+      {
+        "id": 406,
+        "title": "Create API route for variant resolution",
+        "status": "pending",
+        "priority": "high",
+        "description": "Expose variant selection via API",
+        "files": [
+          {
+            "path": "app/api/variants/[slug]/route.ts",
+            "params": ["slug (landing page)", "?kw=keyword"],
+            "response": "Merged page data with variant applied"
+          }
+        ]
+      },
+      {
+        "id": 407,
+        "title": "Add bot detection for SEO safety",
+        "status": "pending",
+        "priority": "high",
+        "description": "Serve default variant to crawlers",
+        "steps": [
+          "Create core/lib/bot-detector.ts",
+          "Check User-Agent for Googlebot, Bingbot, etc.",
+          "If bot detected, force keyword=null (default variant)",
+          "Add to middleware and variant resolver"
+        ]
+      },
+      {
+        "id": 408,
+        "title": "Create landing page template component",
+        "status": "pending",
+        "priority": "high",
+        "description": "React component to render variants",
+        "files": [
+          {
+            "path": "app/[slug]/page.tsx",
+            "logic": [
+              "Get slug from params",
+              "Read kw cookie",
+              "Call variant resolver",
+              "Render merged blocks",
+              "Add canonical tag"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 409,
+        "title": "Add unit tests for variant resolver",
+        "status": "pending",
+        "priority": "high",
+        "description": "Test all matching scenarios",
+        "dependencies": [403],
+        "testCases": [
+          "Exact match returns correct variant",
+          "Pattern match with regex works",
+          "Parent match (hierarchical keywords)",
+          "Default variant when no match",
+          "Priority sorting when multiple matches",
+          "Block merging preserves order",
+          "Bot detection bypasses personalization"
+        ]
+      },
+      {
+        "id": 410,
+        "title": "Test keyword personalization end-to-end",
+        "status": "pending",
+        "priority": "high",
+        "description": "Full user flow test",
+        "dependencies": [402, 408],
+        "testSteps": [
+          "Create landing page in admin: '/healthcare'",
+          "Create variant: keyword='nurse-recruitment'",
+          "Visit: /?kw=nurse-recruitment",
+          "Verify cookie set: document.cookie",
+          "Verify variant content displayed",
+          "Visit as Googlebot: curl -A 'Googlebot' /healthcare",
+          "Verify default variant shown"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 500,
+    "title": "EPIC-04: Security, SEO, Caching, and WAF",
+    "status": "pending",
+    "priority": "medium",
+    "description": "Headers, cache rules, canonical, sitemap.",
+    "dependencies": [400],
+    "details": "CSP/HSTS/Referrer/XFO; CF bypass /admin,/api; cache static; kw cache variance optional.",
+    "testStrategy": "A on securityheaders.com; SEO ≥ 95.",
+    "subtasks": [
+      {
+        "id": 501,
+        "title": "Add security headers middleware",
+        "status": "pending",
+        "priority": "high",
+        "description": "CSP, HSTS, XFO, Referrer Policy",
+        "files": [
+          {
+            "path": "middleware.ts",
+            "headers": [
+              "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+              "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+              "X-Frame-Options: DENY",
+              "X-Content-Type-Options: nosniff",
+              "Referrer-Policy: strict-origin-when-cross-origin",
+              "Permissions-Policy: geolocation=(), microphone=(), camera=()"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 502,
+        "title": "Configure Cloudflare cache rules",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Edge caching strategy",
+        "steps": [
+          "Login to Cloudflare dashboard",
+          "Navigate to Caching > Cache Rules",
+          "Rule 1: Bypass /admin/* and /api/*",
+          "Rule 2: Cache /_next/static/* for 1 year",
+          "Rule 3: Cache images from R2 for 7 days",
+          "Rule 4 (optional): Vary by kw cookie on main pages",
+          "Test: curl -I https://cms.yourdomain.com/_next/static/..."
+        ]
+      },
+      {
+        "id": 503,
+        "title": "Add canonical tags to landing pages",
+        "status": "pending",
+        "priority": "high",
+        "description": "SEO: prevent duplicate content",
+        "files": [
+          {
+            "path": "app/[slug]/page.tsx",
+            "metadata": [
+              "canonical: https://yourdomain.com/[slug]",
+              "No ?kw parameter in canonical",
+              "Consistent across all variants"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 504,
+        "title": "Create XML sitemap",
+        "status": "pending",
+        "priority": "high",
+        "description": "Dynamic sitemap for landing pages",
+        "files": [
+          {
+            "path": "app/sitemap.xml/route.ts",
+            "logic": [
+              "Query all published LandingPages",
+              "Generate <url> entries",
+              "Include lastmod, priority",
+              "Only include default variants (not keyword variants)",
+              "Return XML response"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 505,
+        "title": "Add robots.txt",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Control crawler access",
+        "files": [
+          {
+            "path": "app/robots.txt/route.ts",
+            "content": [
+              "User-agent: *",
+              "Allow: /",
+              "Disallow: /admin",
+              "Disallow: /api",
+              "Sitemap: https://yourdomain.com/sitemap.xml"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 506,
+        "title": "Add rate limiting to form submissions",
+        "status": "pending",
+        "priority": "high",
+        "description": "Prevent abuse",
+        "steps": [
+          "pnpm add @upstash/ratelimit @upstash/redis (or in-memory alternative)",
+          "Create core/lib/rate-limiter.ts",
+          "Apply to contact form API route",
+          "Limit: 5 submissions per IP per hour",
+          "Return 429 Too Many Requests"
+        ]
+      },
+      {
+        "id": 507,
+        "title": "Configure Cloudflare WAF",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Web Application Firewall rules",
+        "steps": [
+          "Navigate to Security > WAF",
+          "Enable OWASP Core Ruleset",
+          "Add custom rule: Block SQL injection patterns",
+          "Add custom rule: Block XSS attempts",
+          "Add custom rule: Rate limit /api/contact to 10/min",
+          "Test with curl injection attempts"
+        ]
+      },
+      {
+        "id": 508,
+        "title": "Test security headers",
+        "status": "pending",
+        "priority": "high",
+        "description": "Verify A grade on securityheaders.com",
+        "dependencies": [501],
+        "testSteps": [
+          "Deploy to production URL",
+          "Visit https://securityheaders.com",
+          "Enter site URL",
+          "Verify A or A+ grade",
+          "Check all headers present",
+          "Fix any warnings"
+        ]
+      },
+      {
+        "id": 509,
+        "title": "Run Lighthouse SEO audit",
+        "status": "pending",
+        "priority": "high",
+        "description": "Verify SEO score ≥ 95",
+        "dependencies": [503, 504],
+        "testSteps": [
+          "Open Chrome DevTools",
+          "Navigate to Lighthouse tab",
+          "Run SEO audit on landing page",
+          "Verify score ≥ 95",
+          "Fix any issues (meta descriptions, alt tags, etc.)",
+          "Re-run until passing"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 600,
+    "title": "EPIC-05: Observability & CI/CD",
+    "status": "pending",
+    "priority": "medium",
+    "description": "Structured logs, CI pipeline, scans.",
+    "dependencies": [300],
+    "details": "pino logger; GH Actions: lint/test/build/scan/deploy/health.",
+    "testStrategy": "CI green; health check OK.",
+    "subtasks": [
+      {
+        "id": 601,
+        "title": "Add structured logging with pino",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Production-ready logging",
+        "steps": [
+          "pnpm add pino pino-pretty",
+          "Create core/lib/logger.ts",
+          "Configure request ID middleware",
+          "Add correlation ID to all logs",
+          "Log levels: error, warn, info, debug",
+          "Pretty print in dev, JSON in prod"
+        ]
+      },
+      {
+        "id": 602,
+        "title": "Add request tracing",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Track requests across services",
+        "dependencies": [601],
+        "steps": [
+          "Generate unique request ID in middleware",
+          "Pass ID to Payload, MongoDB, R2 calls",
+          "Include in all log entries",
+          "Add to response headers: X-Request-ID"
+        ]
+      },
+      {
+        "id": 603,
+        "title": "Setup GitHub Actions workflow",
+        "status": "pending",
+        "priority": "high",
+        "description": "Automated CI/CD pipeline",
+        "files": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "jobs": [
+              "lint: ESLint + Prettier check",
+              "typecheck: tsc --noEmit",
+              "test: vitest run (unit + integration)",
+              "build: next build",
+              "security: npm audit",
+              "deploy: Railway deploy (on main branch)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 604,
+        "title": "Add deployment health check",
+        "status": "pending",
+        "priority": "high",
+        "description": "Verify deployment success",
+        "dependencies": [603],
+        "steps": [
+          "Add job to CI: 'health-check'",
+          "Wait 30s after deploy",
+          "curl $DEPLOYMENT_URL/api/health",
+          "Assert status 200",
+          "Assert database connected",
+          "Fail deployment if unhealthy"
+        ]
+      },
+      {
+        "id": 605,
+        "title": "Setup error monitoring (optional)",
+        "status": "pending",
+        "priority": "low",
+        "description": "Sentry or similar",
+        "steps": [
+          "Sign up for Sentry.io (free tier)",
+          "pnpm add @sentry/nextjs",
+          "Create sentry.client.config.ts",
+          "Create sentry.server.config.ts",
+          "Add DSN to env vars",
+          "Test error capture"
+        ]
+      },
+      {
+        "id": 606,
+        "title": "Add performance monitoring",
+        "status": "pending",
+        "priority": "low",
+        "description": "Track key metrics",
+        "steps": [
+          "Add Web Vitals tracking",
+          "Log to console or analytics",
+          "Track: LCP, FID, CLS, TTFB",
+          "Monitor MongoDB query times",
+          "Monitor R2 upload times"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 700,
+    "title": "EPIC-06: Bootstrap CLI & Reusability",
+    "status": "pending",
+    "priority": "high",
+    "description": "scripts/bootstrap.mjs prompts & writes configs; optional auto-provision.",
+    "dependencies": [200, 300, 400, 600],
+    "details": "Generate site.json/env.json/.env; optionally run Task Master provisioning.",
+    "testStrategy": "New site deploys in < 15 min.",
+    "subtasks": [
+      {
+        "id": 701,
+        "title": "Enhance bootstrap CLI with validation",
+        "status": "pending",
+        "priority": "high",
+        "description": "Add input validation and error handling",
+        "steps": [
+          "Validate domain format (DNS-safe)",
+          "Validate brand name (alphanumeric)",
+          "Validate color is valid hex",
+          "Check required env vars before provisioning",
+          "Add --dry-run flag for testing"
+        ]
+      },
+      {
+        "id": 702,
+        "title": "Add multi-site config management",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Support multiple sites from one repo",
+        "steps": [
+          "Create /sites directory",
+          "Each site: /sites/<domain>/config.json",
+          "Bootstrap writes to /sites/<domain>/",
+          "Add --site=<domain> flag to select active",
+          "Symlink active site config to /config"
+        ]
+      },
+      {
+        "id": 703,
+        "title": "Create upgrade script",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Update existing sites with blueprint changes",
+        "files": [
+          {
+            "path": "scripts/upgrade.mjs",
+            "logic": [
+              "Detect blueprint version",
+              "Compare to site version",
+              "Show diff of changes",
+              "Prompt for confirmation",
+              "Merge configs preserving custom values",
+              "Run migrations if needed"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 704,
+        "title": "Add template propagation",
+        "status": "pending",
+        "priority": "low",
+        "description": "Share component updates across sites",
+        "steps": [
+          "Identify shared templates in /core",
+          "Add version tracking to components",
+          "Create sync command: scripts/sync-templates.mjs",
+          "Selective sync: --components=Header,Footer",
+          "Test with 2 dummy sites"
+        ]
+      },
+      {
+        "id": 705,
+        "title": "Test bootstrap with real site",
+        "status": "pending",
+        "priority": "high",
+        "description": "End-to-end test of site creation",
+        "testSteps": [
+          "Run: node scripts/bootstrap.mjs --domain=test.example.com --brand=TestCo",
+          "Verify config files created",
+          "Verify .env populated",
+          "Deploy to Railway test project",
+          "Access /admin and login",
+          "Create test landing page",
+          "Verify personalization works",
+          "Time the entire process (target: < 15 min)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 900,
+    "title": "EPIC-07: End-to-End Smoke & Hardening",
+    "status": "pending",
+    "priority": "high",
+    "description": "E2E + load + security + SEO checks; docs/runbooks.",
+    "dependencies": [500, 600, 700],
+    "details": "Playwright + k6 + ZAP + Lighthouse; finalize docs.",
+    "testStrategy": "All checks pass; sign-off.",
+    "subtasks": [
+      {
+        "id": 901,
+        "title": "Setup Playwright E2E tests",
+        "status": "pending",
+        "priority": "high",
+        "description": "Automated browser testing",
+        "steps": [
+          "pnpm add -D @playwright/test",
+          "npx playwright install",
+          "Create tests/e2e/admin.spec.ts",
+          "Create tests/e2e/landing-page.spec.ts",
+          "Create tests/e2e/personalization.spec.ts"
+        ]
+      },
+      {
+        "id": 902,
+        "title": "Write E2E test: Admin login flow",
+        "status": "pending",
+        "priority": "high",
+        "description": "Test Payload admin",
+        "dependencies": [901],
+        "testCases": [
+          "Navigate to /admin",
+          "Login with credentials",
+          "Create landing page",
+          "Create variant",
+          "Upload media to R2",
+          "Logout"
+        ]
+      },
+      {
+        "id": 903,
+        "title": "Write E2E test: Keyword personalization",
+        "status": "pending",
+        "priority": "high",
+        "description": "Test variant switching",
+        "dependencies": [901],
+        "testCases": [
+          "Visit /?kw=test-keyword",
+          "Assert cookie set",
+          "Assert variant content visible",
+          "Visit same page without ?kw",
+          "Assert cookie persists",
+          "Assert variant still shown",
+          "Clear cookie, assert default variant"
+        ]
+      },
+      {
+        "id": 904,
+        "title": "Setup k6 load testing",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Performance under load",
+        "steps": [
+          "Install k6: https://k6.io/docs/getting-started/installation/",
+          "Create tests/load/k6-smoke.js",
+          "Test scenario: 10 VUs for 30s",
+          "Target endpoints: /, /api/health, /[slug]?kw=test",
+          "Assert p95 < 400ms"
+        ]
+      },
+      {
+        "id": 905,
+        "title": "Run security scan with OWASP ZAP",
+        "status": "pending",
+        "priority": "high",
+        "description": "Automated vulnerability scanning",
+        "steps": [
+          "Install OWASP ZAP: https://www.zaproxy.org/download/",
+          "Run baseline scan: zap-baseline.py -t https://yourdomain.com",
+          "Review alerts",
+          "Fix high/medium severity issues",
+          "Re-run until clean"
+        ]
+      },
+      {
+        "id": 906,
+        "title": "Run Lighthouse CI",
+        "status": "pending",
+        "priority": "high",
+        "description": "Automated SEO/Performance audits",
+        "steps": [
+          "pnpm add -D @lhci/cli",
+          "Create lighthouserc.js config",
+          "Add to CI workflow",
+          "Assert SEO score ≥ 95",
+          "Assert Performance ≥ 90",
+          "Assert Accessibility ≥ 95"
+        ]
+      },
+      {
+        "id": 907,
+        "title": "Create deployment runbook",
+        "status": "pending",
+        "priority": "medium",
+        "description": "Operations documentation",
+        "files": [
+          {
+            "path": "docs/DEPLOYMENT.md",
+            "sections": [
+              "Pre-requisites checklist",
+              "Bootstrap new site steps",
+              "Railway deployment steps",
+              "Cloudflare configuration",
+              "Environment variables reference",
+              "Troubleshooting common issues",
+              "Rollback procedure"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 908,
+        "title": "Create operator guide",
+        "status": "pending",
+        "priority": "medium",
+        "description": "How to manage sites",
+        "files": [
+          {
+            "path": "docs/OPERATIONS.md",
+            "sections": [
+              "Managing landing pages",
+              "Creating keyword variants",
+              "Testing personalization",
+              "Monitoring health checks",
+              "Scaling Railway resources",
+              "Backup/restore procedures",
+              "Security incident response"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 909,
+        "title": "Final integration test",
+        "status": "pending",
+        "priority": "high",
+        "description": "Complete end-to-end validation",
+        "testCases": [
+          "Bootstrap new site in < 15 min",
+          "Deploy to production",
+          "All E2E tests pass",
+          "Load test: p95 < 400ms",
+          "Security scan: no high/medium issues",
+          "Lighthouse: SEO ≥ 95",
+          "Health check returns 200",
+          "Variant personalization works for 20 keywords",
+          "Email notifications delivered",
+          "Media uploads to R2 working",
+          "Cloudflare cache functioning",
+          "WAF blocking malicious requests"
+        ]
+      },
+      {
+        "id": 910,
+        "title": "Project sign-off",
+        "status": "pending",
+        "priority": "high",
+        "description": "Final acceptance",
+        "dependencies": [909],
+        "criteria": [
+          "All EPICs completed",
+          "All tests passing",
+          "Documentation complete",
+          "Security audit passed",
+          "Performance benchmarks met",
+          "Runbooks validated",
+          "Demo to stakeholders successful"
+        ]
+      }
+    ]
+  }
+]

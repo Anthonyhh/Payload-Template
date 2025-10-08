@@ -1,0 +1,24 @@
+# Robots.txt for FlowState IT
+# https://flowstate-it.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+
+# Sitemap location
+Sitemap: https://flowstate-it.com/sitemap.xml
+
+# Crawl-delay for bots that respect it
+Crawl-delay: 1
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
