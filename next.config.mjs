@@ -1,4 +1,5 @@
 import { withPayload } from '@payloadcms/next/withPayload'
+import { withSentryConfig } from '@sentry/nextjs'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -25,4 +26,17 @@ const nextConfig = {
   },
 }
 
-export default withPayload(nextConfig)
+const sentryConfig = {
+  // Suppresses sourcemap upload warning during development (no SENTRY_AUTH_TOKEN)
+  silent: !process.env.CI,
+  // Disable source map upload unless in CI with auth token
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
+  webpack: {
+    // Automatically instrument Next.js data fetching methods
+    autoInstrumentServerFunctions: true,
+  },
+}
+
+export default withSentryConfig(withPayload(nextConfig), sentryConfig)

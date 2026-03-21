@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import * as Sentry from '@sentry/nextjs'
 import { Button } from '@/components/ui/button'
 
 export default function Error({
@@ -11,8 +12,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Application error:', error)
+    Sentry.captureException(error)
   }, [error])
 
   return (
@@ -26,7 +26,7 @@ export default function Error({
             Something went wrong
           </h2>
           <p className="text-muted-foreground text-fluid-base">
-            We've been notified and are working to fix the issue.
+            We&apos;ve been notified and are working to fix the issue.
           </p>
           {error.digest && (
             <p className="text-xs text-muted-foreground/60 mt-4 font-mono">
