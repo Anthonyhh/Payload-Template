@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   // Security Headers
-  addSecurityHeaders(response)
+  addSecurityHeaders(response, request)
 
   // Apply security policies based on environment
   if (process.env.NODE_ENV === 'production') {
@@ -47,7 +47,7 @@ export function middleware(request: NextRequest) {
   return response
 }
 
-function addSecurityHeaders(response: NextResponse) {
+function addSecurityHeaders(response: NextResponse, request: NextRequest) {
   // Prevent clickjacking attacks
   response.headers.set('X-Frame-Options', 'DENY')
 
@@ -100,11 +100,17 @@ function addSecurityHeaders(response: NextResponse) {
   // Prevent DNS prefetching to external domains
   response.headers.set('X-DNS-Prefetch-Control', 'off')
 
-  // Disable client-side caching for sensitive pages
+  // Cache-Control: only apply private/no-cache to API and admin routes
+  // Public RSC pages: let Next.js set appropriate cache headers; do not override
   if (response.headers.get('Cache-Control') === null) {
-    response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate')
-    response.headers.set('Pragma', 'no-cache')
-    response.headers.set('Expires', '0')
+    const pathname = request.nextUrl.pathname
+    const isPrivateRoute = pathname.startsWith('/api/') || pathname.startsWith('/admin')
+    if (isPrivateRoute) {
+      response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+      response.headers.set('Pragma', 'no-cache')
+      response.headers.set('Expires', '0')
+    }
+    // Public routes: Next.js RSC sets appropriate cache headers; do not override
   }
 }
 

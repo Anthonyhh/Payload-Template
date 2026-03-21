@@ -61,6 +61,10 @@ export const Users: CollectionConfig = {
           label: 'User',
           value: 'user',
         },
+        {
+          label: 'Client',
+          value: 'client',
+        },
       ],
       access: {
         // Only admins can assign roles
