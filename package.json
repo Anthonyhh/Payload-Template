@@ -20,7 +20,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "seed:admin": "tsx scripts/create-admin.ts"
+    "seed:admin": "tsx scripts/create-admin.ts",
+    "seed:phase2": "npx tsx scripts/seed-phase2.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

@@ -55,7 +55,8 @@ export const BlogPosts: CollectionConfig = {
       name: 'featuredImage',
       type: 'upload',
       relationTo: 'media',
-      required: true,
+      // required removed: binary uploads cannot be scripted in seed scripts
+      // Phase 2 plan decision: images uploaded manually via Payload admin after seed
       label: 'Featured Image',
     },
     {
