@@ -848,7 +848,8 @@ const KNOWN_TITLES: Record<string, string> = {
 async function seedBlogPosts(payload: Awaited<ReturnType<typeof getPayload>>) {
   console.log('\n--- Migrating blog posts ---')
 
-  const blogDir = '/c/Users/antho/OneDrive/Documents/Flowstateit/content/blog'
+  // Windows path (Node.js on Windows uses native paths, not Unix-style)
+  const blogDir = 'C:/Users/antho/OneDrive/Documents/Flowstateit/content/blog'
 
   if (!fs.existsSync(blogDir)) {
     console.warn(`  WARNING: Blog directory not found at ${blogDir}`)
