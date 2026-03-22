@@ -18,7 +18,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground hover:scale-105',
         link: 'text-primary underline-offset-4 hover:underline',
         gradient:
-          'bg-gradient-to-r from-orange to-orange-light text-white hover:from-orange/90 hover:to-orange-light/90 hover:scale-105 hover:shadow-xl glow-orange animate-gradient relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:-translate-x-full before:transition-transform before:duration-700 hover:before:translate-x-full',
+          'bg-gradient-to-r from-[#E91E8C] to-[#9B4DCA] text-white hover:from-[#E91E8C]/90 hover:to-[#9B4DCA]/90 hover:scale-105 hover:shadow-[0_0_40px_rgba(233,30,140,0.3)] relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:-translate-x-full before:transition-transform before:duration-700 hover:before:translate-x-full overflow-hidden focus-visible:ring-2 focus-visible:ring-[#E91E8C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141C]',
         glass:
           'glass backdrop-blur-lg border border-white/20 text-white hover:bg-white/20 hover:scale-105 hover:shadow-xl',
         neon: 'bg-black border-2 border-primary text-primary hover:bg-primary hover:text-black hover:scale-105 hover:shadow-xl glow text-glow transition-all duration-300',

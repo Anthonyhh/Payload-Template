@@ -94,25 +94,39 @@ code {
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
   .dark {
-        --background: 222.2 84% 4.9%;
-        --foreground: 210 40% 98%;
-        --card: 222.2 84% 4.9%;
-        --card-foreground: 210 40% 98%;
-        --popover: 222.2 84% 4.9%;
-        --popover-foreground: 210 40% 98%;
-        --primary: 210 40% 98%;
-        --primary-foreground: 222.2 47.4% 11.2%;
-        --secondary: 217.2 32.6% 17.5%;
-        --secondary-foreground: 210 40% 98%;
-        --muted: 217.2 32.6% 17.5%;
-        --muted-foreground: 215 20.2% 65.1%;
-        --accent: 217.2 32.6% 17.5%;
-        --accent-foreground: 210 40% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 210 40% 98%;
-        --border: 217.2 32.6% 17.5%;
-        --input: 217.2 32.6% 17.5%;
-        --ring: 212.7 26.8% 83.9%;
+        /* FlowState IT Brand Overrides — Phase 2 — replaces shadcn slate defaults */
+        /* Surfaces */
+        --background: 240 9% 10%;          /* #14141C — page background */
+        --foreground: 240 33% 97%;         /* #F5F5FA — primary text */
+        --card: 240 8% 13%;                /* #1C1C26 — card/panel surface */
+        --card-foreground: 240 33% 97%;    /* #F5F5FA */
+        --popover: 240 8% 13%;             /* #1C1C26 */
+        --popover-foreground: 240 33% 97%; /* #F5F5FA */
+
+        /* Interactive */
+        --primary: 318 80% 52%;            /* #E91E8C — magenta */
+        --primary-foreground: 0 0% 100%;   /* #FFFFFF */
+        --accent: 270 58% 55%;             /* #9B4DCA — purple */
+        --accent-foreground: 0 0% 100%;    /* #FFFFFF */
+
+        /* Muted */
+        --secondary: 240 7% 16%;           /* #22222E */
+        --secondary-foreground: 240 5% 65%; /* #A0A0B0 */
+        --muted: 240 7% 16%;               /* #22222E */
+        --muted-foreground: 240 5% 65%;    /* #A0A0B0 */
+
+        /* Borders */
+        --border: 240 6% 20%;              /* #2A2A38 */
+        --input: 240 6% 20%;               /* #2A2A38 */
+        --ring: 318 80% 52%;               /* #E91E8C — focus ring */
+
+        /* Destructive */
+        --destructive: 0 84% 60%;          /* #EF4444 */
+        --destructive-foreground: 0 0% 100%;
+
+        /* Radius */
+        --radius: 0.75rem;                 /* 12px — rounded-xl baseline */
+
         --chart-1: 220 70% 50%;
         --chart-2: 160 60% 45%;
         --chart-3: 30 80% 55%;
@@ -120,12 +134,12 @@ code {
         --chart-5: 340 75% 55%;
         --sidebar-background: 240 5.9% 10%;
         --sidebar-foreground: 240 4.8% 95.9%;
-        --sidebar-primary: 224.3 76.3% 48%;
+        --sidebar-primary: 318 80% 52%;
         --sidebar-primary-foreground: 0 0% 100%;
         --sidebar-accent: 240 3.7% 15.9%;
         --sidebar-accent-foreground: 240 4.8% 95.9%;
         --sidebar-border: 240 3.7% 15.9%;
-        --sidebar-ring: 217.2 91.2% 59.8%;
+        --sidebar-ring: 318 80% 52%;
     }
 }
 
@@ -138,4 +152,40 @@ code {
   body {
     @apply bg-background text-foreground;
     }
+}
+
+/* FlowState IT — Typography Utility Classes */
+.text-display {
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-family: var(--font-heading);
+}
+.text-heading {
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  font-family: var(--font-heading);
+}
+.text-body {
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: var(--font-sans);
+}
+.text-label {
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+}
+.text-label-mono {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  font-family: var(--font-mono);
 }
