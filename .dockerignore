@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.env
+.env.local
+*.md
+.planning
+.github
+.vscode
+tests
+lib/*.spec.ts
+lib/*.property.spec.ts
